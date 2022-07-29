@@ -1,20 +1,15 @@
-FROM nvidia/cuda:11.1-base-ubuntu18.04
-WORKDIR /app
+FROM ubuntu:20.04
 
-ARG PACKAGE_VERSION=5.0.11
-ARG BUILD_PACKAGES="wget apt-transport-https"
-ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && apt-get install foo bar && \ 
-		wget \
-		gawk \
-		git \
-		tar \
-		python3 \
-		python3-pip \
-		libuv1-dev \
-		lsb && \
-		apt-get autoclean && \ rm -rf /var/lib/apt/lists/*
+RUN set -e \
+      && apt-get -y update \
+      && apt-get -y dist-upgrade \
+      && apt-get -y install --no-install-recommends --no-install-suggests \
+        ca-certificates curl openjdk-8-jre perl unzip \
+      && apt-get -y autoremove \
+      && apt-get clean \
+      && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /app/demultiplexed
 RUN mkdir -p /app/raw_reads
