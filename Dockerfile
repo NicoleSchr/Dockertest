@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM python:3:8
 WORKDIR /app
 
 RUN apt-get update 
