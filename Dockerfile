@@ -5,7 +5,7 @@ ARG PACKAGE_VERSION=5.0.11
 ARG BUILD_PACKAGES="wget apt-transport-https"
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && \ apt-get install --yes $BUILD_PACKAGES libnvidia-compute-460-server && \
+RUN apt-get update && apt-get install foo bar && \ 
 		wget \
 		gawk \
 		git \
