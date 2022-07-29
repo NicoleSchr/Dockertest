@@ -1,9 +1,11 @@
-FROM python:3.8
+FROM nvidia/cuda:11.1-base-ubuntu18.04
 WORKDIR /app
 
-RUN apt-get update 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
-RUN apt-get update && apt-get install -y \
+ARG PACKAGE_VERSION=5.0.11
+ARG BUILD_PACKAGES="wget apt-transport-https"
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \ apt-get install --yes $BUILD_PACKAGES libnvidia-compute-460-server && \
 		wget \
 		gawk \
 		git \
@@ -12,7 +14,7 @@ RUN apt-get update && apt-get install -y \
 		python3-pip \
 		libuv1-dev \
 		lsb && \
-		apt-get autoclean && rm -rf /var/lib/apt/lists/*
+		apt-get autoclean && \ rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /app/demultiplexed
 RUN mkdir -p /app/raw_reads
@@ -24,11 +26,4 @@ RUN git clone https://github.com/grenaud/deML.git  && \
 	cd deML.git && \
 	make
 
-
-WORKDIR /app/deML
-RUN make
-ENV PATH="$PATH:/app/deML/bin/"
-
-
-
-CMD ["sh"]
+#CMD ["src/deML -i /app/barcode/barcode.txt -f /app/raw_reads/lane1_R1.fastq.gz - r /app/raw_reads/lane1_R4.fastq.gz -if1 /app/raw_reads/lane1_R2.fastq.gz -if2 /app/raw_reads/lane1_R3.fastq.gz -o /app/demultiplexed."]
